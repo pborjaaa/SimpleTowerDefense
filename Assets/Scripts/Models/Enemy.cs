@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Controllers;
 using Events;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Models
         private List<Transform> waypoints = new();
         private bool movingToWaypoints;
         private EnemyEscapedEvent EnemyEscapedEvent;
-        private EnemyDeathEvent _enemyDeathEvent;
+        private EnemyDeathEvent enemyDeathEvent;
 
         private void Update()
         {
@@ -27,7 +28,7 @@ namespace Models
         public void Setup(GameObject[] path, EnemyEscapedEvent enemyEscapedEvent, Transform startingPos, EnemyDeathEvent enemyDeathEvent)
         {
             EnemyEscapedEvent = enemyEscapedEvent;
-            _enemyDeathEvent = enemyDeathEvent;
+            this.enemyDeathEvent = enemyDeathEvent;
             transform.position = startingPos.position;
             waypoints = new List<Transform>();
             
@@ -59,7 +60,7 @@ namespace Models
             }
         }
 
-        public void TakeDamage(int damageAmount, int shieldDamageAmount)
+        public void TakeDamage(int damageAmount, int shieldDamageAmount, GameObject projectile)
         {
             shield -= shieldDamageAmount;
             
@@ -67,7 +68,7 @@ namespace Models
                 health -= damageAmount;
 
             if (health <= 0)
-                _enemyDeathEvent.Publish(gameObject);
+                enemyDeathEvent.Publish(gameObject);
         }
     }
 

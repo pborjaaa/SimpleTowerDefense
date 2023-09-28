@@ -28,6 +28,7 @@ namespace Views
             SetupLevel();
             Controller.EnemyEscapedEvent.Subscribe(OnEnemyEscapedEvent);
             Controller.CurrencyChangedEvent.Subscribe(SetupCoinsText);
+            Controller.EnemyDeathEvent.Subscribe(OnEnemyDeathEvent);
         }
 
         private void Update()
@@ -135,8 +136,14 @@ namespace Views
         private void TowerMenu(Vector3 position, bool topButton, Transform button)
         {
             towerMenu.gameObject.SetActive(true);
-            towerMenu.GetComponent<TowerMenuView>().Setup(Controller.PlayerState, button);
+            towerMenu.GetComponent<TowerMenuView>().Setup(Controller.PlayerState, button, Controller.CurrencyChangedEvent);
             towerMenu.transform.position = topButton ? new Vector3(position.x, position.y - towerMenuOffset, position.z) : new Vector3(position.x, position.y + towerMenuOffset, position.z);
+        }
+        
+        private void OnEnemyDeathEvent(GameObject enemy)
+        {
+            Controller.OnEnemyDeathEvent(enemy);
+            SetupCoinsText();
         }
     }
 }

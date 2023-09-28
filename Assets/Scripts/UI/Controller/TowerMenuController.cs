@@ -14,7 +14,7 @@ namespace UI.Controller
             return PlayerState.Coins >= GetTowerCost(towerType);
         }
 
-        private int GetTowerCost(TowerType towerType)
+        public int GetTowerCost(TowerType towerType)
         {
             return towerType switch
             {

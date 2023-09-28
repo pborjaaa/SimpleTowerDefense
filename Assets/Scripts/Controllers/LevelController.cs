@@ -1,7 +1,9 @@
-﻿using Events;
+﻿using System;
+using Events;
 using Models;
 using UnityEngine;
 using Utilities;
+using Random = UnityEngine.Random;
 
 namespace Controllers
 {
@@ -20,14 +22,15 @@ namespace Controllers
         
         public LevelController(ILevelLoader levelLoader)
         {
-            var currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-            Level = levelLoader.Load("Level " + currentLevel);
             EnemyEscapedEvent = new EnemyEscapedEvent();
             EnemyDeathEvent = new EnemyDeathEvent();
-            EnemyDeathEvent.Subscribe(OnEnemyDeathEvent);
             CurrencyChangedEvent = new CurrencyChangedEvent();
+            CurrencyChangedEvent.Subscribe(OnCurrencyChangedEvent);
             PlayerState = new PlayerState(GameConfig.InitialCoins, CurrencyChangedEvent);
             enemyPool = new EnemyPool();
+            
+            var currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
+            Level = levelLoader.Load("Level " + currentLevel);
             CurrentWave = 0;
         }
 
@@ -75,9 +78,27 @@ namespace Controllers
             }
         }
         
-        private void OnEnemyDeathEvent(GameObject enemy)
+        public void OnEnemyDeathEvent(GameObject enemy)
         {
+            PlayerState.Coins += GetEnemyCoins(enemy.GetComponent<Enemy>().enemyType);
             ReturnEnemy(enemy);
+        }
+        
+        private void OnCurrencyChangedEvent(int amount)
+        {
+            PlayerState.Coins += amount;
+        }
+
+        private int GetEnemyCoins(EnemyType type)
+        {
+            return type switch
+            {
+                EnemyType.NORMAL => GameConfig.NormalEnemyCoins,
+                EnemyType.FAST => GameConfig.FastEnemyCoins,
+                EnemyType.HIGH_HP => GameConfig.HighHpEnemyCoins,
+                EnemyType.SHIELDED => GameConfig.ShieldedEnemyCoins,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
         }
     }
 }

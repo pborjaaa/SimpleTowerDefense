@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Controllers;
+using UnityEngine;
 
 namespace Models
 {
@@ -9,6 +10,7 @@ namespace Models
         private int damage;
         private int shieldDamage;
         private Transform target;
+        private ProjectilePool projectilePool;
 
         public void SetProjectile(Transform newTarget, int damage, int shieldDamage)
         {
@@ -16,34 +18,42 @@ namespace Models
             this.damage = damage;
             this.shieldDamage = shieldDamage;
         }
+        
+        private void Start()
+        {
+            projectilePool = FindObjectOfType<ProjectilePool>();
+        }
 
         private void Update()
         {
+            ProjectileMovement();
+        }
+
+        private void ProjectileMovement()
+        {
             if (target == null)
             {
-                Destroy(gameObject);
+                projectilePool.ReturnProjectile(gameObject);
                 return;
             }
 
-            Vector3 moveDirection = (target.position - transform.position).normalized;
+            var moveDirection = (target.position - transform.position).normalized;
             transform.Translate(moveDirection * speed * Time.deltaTime);
 
             var distanceToTarget = Vector3.Distance(transform.position, target.position);
             if (distanceToTarget < 0.1f)
             {
                 ApplyDamage(target.gameObject);
-                Destroy(gameObject);
             }
         }
 
         private void ApplyDamage(GameObject enemy)
         {
-            // Aquí puedes implementar la lógica para aplicar daño al enemigo
-            // Por ejemplo, puedes tener una clase Enemy con un método TakeDamage
-            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            var enemyScript = enemy.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                enemyScript.TakeDamage(damage, shieldDamage);
+                enemyScript.TakeDamage(damage, shieldDamage, gameObject);
+                projectilePool.ReturnProjectile(gameObject);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Events;
 using Models;
 using UI.Controller;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace UI.View
             
         private Dictionary<TowerType, GameObject> towerPrefabs = new();
         private Transform currentButton;
+        private CurrencyChangedEvent currencyChangedEvent;
         
         private void Start()
         {
@@ -59,14 +61,16 @@ namespace UI.View
                 {
                     var tower = Instantiate(prefab, towersContainer.transform);
                     tower.transform.position = currentButton.position;
+                    currencyChangedEvent.Publish(-Controller.GetTowerCost(towerType));
                     currentButton.gameObject.SetActive(false);
                     gameObject.SetActive(false);
                 }
             }
         }
 
-        public void Setup(PlayerState playerState, Transform button)
+        public void Setup(PlayerState playerState, Transform button, CurrencyChangedEvent currencyChangedEvent)
         {
+            this.currencyChangedEvent = currencyChangedEvent;
             Controller.PlayerState = playerState;
             currentButton = button;
         }

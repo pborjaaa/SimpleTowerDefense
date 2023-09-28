@@ -1,3 +1,5 @@
+using System;
+using Controllers;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,23 +11,30 @@ namespace Models
         public int range;
         public int shieldDamage;
         public float attackCooldown;
-        public GameObject projectilePrefab;
+        public ProjectilePool projectilePool;
         
         private float lastAttackTime;
-        
+
+        private void Start()
+        {
+            projectilePool = FindObjectOfType<ProjectilePool>();
+        }
+
         private void Update()
         {
-            // Busca objetos dentro del rango de ataque en 3D
-            Collider[] colliders = Physics.OverlapSphere(transform.position, range);
+            CheckEnemies();
+        }
 
-            foreach (Collider collider in colliders)
+        private void CheckEnemies()
+        {
+            var colliders = Physics.OverlapSphere(transform.position, range);
+
+            foreach (var collider in colliders)
             {
                 if (collider.CompareTag("Enemy"))
                 {
-                    // Comprueba si ha pasado suficiente tiempo desde el último ataque
-                    if (Time.time - lastAttackTime >= attackCooldown)
+                    if (collider && Time.time - lastAttackTime >= attackCooldown)
                     {
-                        // Dispara al enemigo
                         ShootAtEnemy(collider.gameObject);
                         lastAttackTime = Time.time;
                     }
@@ -35,9 +44,10 @@ namespace Models
 
         private void ShootAtEnemy(GameObject enemy)
         {
-            // Crea y dispara un proyectil hacia el enemigo
-            GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            Projectile projectileScript = projectile.GetComponent<Projectile>();
+            var projectile = projectilePool.GetProjectile();
+            projectile.transform.position = transform.position;
+            
+            var projectileScript = projectile.GetComponent<Projectile>();
             if (projectileScript != null)
             {
                 projectileScript.SetProjectile(enemy.transform, damage, shieldDamage);
@@ -46,8 +56,7 @@ namespace Models
         
         private void OnDrawGizmos()
         {
-            // Dibuja un gizmo de esfera para representar el rango de ataque de la torre
-            Handles.color = new Color(1f, 0f, 0f, 0.2f); // Color rojo transparente
+            Handles.color = new Color(1f, 0f, 0f, 0.2f);
             Handles.DrawSolidDisc(transform.position, Vector3.forward, range);
         }
     }

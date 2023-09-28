@@ -14,7 +14,7 @@ namespace Views
             startButton.onClick.AddListener(OnStartButtonClicked);
         }
 
-        private void OnStartButtonClicked()
+        private void OnStartButtonClicked() 
         {
             Controller.OnStartButtonClicked();
         }
