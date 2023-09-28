@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2536ebbe527948d78fd516894c854818, type: 3}
+  m_Name: Level 1
+  m_EditorClassIdentifier: 
+  levelNumber: 1
+  startingDelay: 5
+  timeBetweenWaves: 40
+  maxEnemiesEscaped: 10
+  waves:
+  - {fileID: 11400000, guid: 0ab0bd724902e1849b066e99cb666c42, type: 2}
+  - {fileID: 11400000, guid: f964ebf85d6158a4ab51024385b2fe74, type: 2}
+  levelPrefab: {fileID: 2542709104895318755, guid: 78353adfb3249d14aa88abc570f5e5a3, type: 3}
