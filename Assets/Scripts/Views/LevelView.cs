@@ -2,20 +2,24 @@
 using Controllers;
 using Models;
 using TMPro;
+using UI.View;
 using UnityEngine;
+using UnityEngine.UI;
 using Utilities;
 
 namespace Views
 {
     public class LevelView : NavigableView<LevelController>
     {
-        [SerializeField] private GameObject levelContainer;
-        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private GameObject startPoint;
-        [SerializeField] private GameObject[] endPoints;
         [SerializeField] private GameObject[] paths;
+        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI escapedEnemiesText;
-
+        [SerializeField] private TextMeshProUGUI coinsText;
+        [SerializeField] private int towerMenuOffset;
+        [SerializeField] private GameObject towerMenu;
+        [SerializeField] private GameObject enemysContainer;
+        
         private float timeRemaining;
         
         private void Start()
@@ -23,6 +27,7 @@ namespace Views
             SetController(new LevelController(new ResourcesLevelLoader()));
             SetupLevel();
             Controller.EnemyEscapedEvent.Subscribe(OnEnemyEscapedEvent);
+            Controller.CurrencyChangedEvent.Subscribe(SetupCoinsText);
         }
 
         private void Update()
@@ -32,7 +37,7 @@ namespace Views
 
         private void UpdateTimer()
         {
-            if (timeRemaining > 0f)
+            if (timeRemaining > 0f && !Controller.LastWave)
             {
                 timeRemaining -= Time.deltaTime;
                 if (timeRemaining < 0f)
@@ -40,15 +45,17 @@ namespace Views
                     timeRemaining = 0f;
                 }
         
-                timerText.text = timeRemaining.ToString("F0");
+                timerText.text = "Next wave in: " + timeRemaining.ToString("F0");
             }
             else
             {
                 timeRemaining = Controller.Level.timeBetweenWaves;
                 Controller.AdvanceWave();
-                
-                if(!Controller.LastWave)
+
+                if (!Controller.LastWave)
                     StartCoroutine(SpawnWave(Controller.Level.waves[Controller.CurrentWave]));
+                else
+                    timerText.text = "LAST WAVE";
             }
         }
 
@@ -67,8 +74,9 @@ namespace Views
         private void SpawnEnemy(EnemyType enemyType)
         {
             var enemy = Controller.GetEnemy(enemyType);
+            enemy.transform.parent = enemysContainer.transform;
             var enemyComponent = enemy.GetComponent<Enemy>();
-            enemyComponent.Setup(Controller.ChooseRandomPath(paths), Controller.EnemyEscapedEvent, startPoint.transform);
+            enemyComponent.Setup(Controller.ChooseRandomPath(paths), Controller.EnemyEscapedEvent, startPoint.transform, Controller.EnemyDeathEvent);
         }
 
         private void SetupLevel()
@@ -76,7 +84,9 @@ namespace Views
             if (Controller.Level != null)
             {
                 SetupTimer(Controller.Level.startingDelay);
-                SetupText();
+                SetupEnemiesText();
+                SetupCoinsText();
+                SetupPrefabs();
             }
             else
             {
@@ -84,22 +94,49 @@ namespace Views
             }
         }
 
+        private void SetupPrefabs()
+        {
+            towerMenu.gameObject.SetActive(false);
+        }
+
         private void SetupTimer(float startingDelay)
         {
             timeRemaining = startingDelay;
         }
 
-        private void SetupText()
+        private void SetupEnemiesText()
         {
             escapedEnemiesText.text = "Enemies escaped: " + Controller.EscapedEnemies + "/" + Controller.Level.maxEnemiesEscaped;
+        }
+        
+        private void SetupCoinsText(int amount = 0)
+        {
+            coinsText.text = "Coins: " + Controller.PlayerState.Coins;
         }
         
         private void OnEnemyEscapedEvent(GameObject enemy)
         {
             Controller.EscapedEnemies++;
-            SetupText();
+            SetupEnemiesText();
             Controller.ValidateGameConditions();
             Controller.ReturnEnemy(enemy);
+        }
+
+        public void OnTopTowerButtonClicked(Button button)
+        {
+            TowerMenu(button.transform.position, true, button.transform);
+        }
+        
+        public void OnTowerButtonClicked(Button button)
+        {
+            TowerMenu(button.transform.position, false, button.transform);
+        }
+        
+        private void TowerMenu(Vector3 position, bool topButton, Transform button)
+        {
+            towerMenu.gameObject.SetActive(true);
+            towerMenu.GetComponent<TowerMenuView>().Setup(Controller.PlayerState, button);
+            towerMenu.transform.position = topButton ? new Vector3(position.x, position.y - towerMenuOffset, position.z) : new Vector3(position.x, position.y + towerMenuOffset, position.z);
         }
     }
 }

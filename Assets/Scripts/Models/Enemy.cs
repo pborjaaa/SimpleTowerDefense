@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Models
 {
-    public abstract class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour
     {
         public int health;
         public float speed;
@@ -15,15 +15,8 @@ namespace Models
         private int currentWaypointIndex = 0;
         private List<Transform> waypoints = new();
         private bool movingToWaypoints;
-        private EnemyEscapedEvent enemyEscapedEvent;
-
-        protected Enemy(float speed, int health, int shield, EnemyType enemyType)
-        {
-            this.speed = speed;
-            this.health = health;
-            this.shield = shield;
-            this.enemyType = enemyType;
-        }
+        private EnemyEscapedEvent EnemyEscapedEvent;
+        private EnemyDeathEvent _enemyDeathEvent;
 
         private void Update()
         {
@@ -31,9 +24,10 @@ namespace Models
                 MoveToWaypoint();
         }
 
-        public void Setup(GameObject[] path, EnemyEscapedEvent enemyEscapedEvent, Transform startingPos)
+        public void Setup(GameObject[] path, EnemyEscapedEvent enemyEscapedEvent, Transform startingPos, EnemyDeathEvent enemyDeathEvent)
         {
-            this.enemyEscapedEvent = enemyEscapedEvent;
+            EnemyEscapedEvent = enemyEscapedEvent;
+            _enemyDeathEvent = enemyDeathEvent;
             transform.position = startingPos.position;
             waypoints = new List<Transform>();
             
@@ -59,10 +53,21 @@ namespace Models
                     
                     if (currentWaypointIndex == waypoints.Count)
                     {
-                        enemyEscapedEvent.Publish(gameObject);
+                        EnemyEscapedEvent.Publish(gameObject);
                     }
                 }
             }
+        }
+
+        public void TakeDamage(int damageAmount, int shieldDamageAmount)
+        {
+            shield -= shieldDamageAmount;
+            
+            if (shield <= 0)
+                health -= damageAmount;
+
+            if (health <= 0)
+                _enemyDeathEvent.Publish(gameObject);
         }
     }
 

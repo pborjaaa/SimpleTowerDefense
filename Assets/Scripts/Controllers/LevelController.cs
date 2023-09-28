@@ -11,8 +11,11 @@ namespace Controllers
         public int CurrentWave;
         public bool LastWave;
         public EnemyEscapedEvent EnemyEscapedEvent;
+        public EnemyDeathEvent EnemyDeathEvent;
+        public CurrencyChangedEvent CurrencyChangedEvent;
         public int EscapedEnemies;
-
+        public PlayerState PlayerState;
+        
         private EnemyPool enemyPool;
         
         public LevelController(ILevelLoader levelLoader)
@@ -20,6 +23,10 @@ namespace Controllers
             var currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
             Level = levelLoader.Load("Level " + currentLevel);
             EnemyEscapedEvent = new EnemyEscapedEvent();
+            EnemyDeathEvent = new EnemyDeathEvent();
+            EnemyDeathEvent.Subscribe(OnEnemyDeathEvent);
+            CurrencyChangedEvent = new CurrencyChangedEvent();
+            PlayerState = new PlayerState(GameConfig.InitialCoins, CurrencyChangedEvent);
             enemyPool = new EnemyPool();
             CurrentWave = 0;
         }
@@ -66,6 +73,11 @@ namespace Controllers
             {
                 //TODO - LOSE CONDITION
             }
+        }
+        
+        private void OnEnemyDeathEvent(GameObject enemy)
+        {
+            ReturnEnemy(enemy);
         }
     }
 }

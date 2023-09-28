@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7499582823083782665
+--- !u!1 &8442289802634389805
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,57 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4292886606250438896}
-  - component: {fileID: 4437980303957291815}
-  - component: {fileID: -8949374172820634284}
-  - component: {fileID: 4385180020565101002}
-  - component: {fileID: -3884915452364909040}
-  - component: {fileID: 1959717413267617560}
-  m_Layer: 3
-  m_Name: NormalEnemy
-  m_TagString: Enemy
+  - component: {fileID: 7968038643339769459}
+  - component: {fileID: 4683893118371277685}
+  - component: {fileID: 4753031630878340854}
+  - component: {fileID: 1943096324925211767}
+  - component: {fileID: -2909916332584773396}
+  m_Layer: 0
+  m_Name: Projectile
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4292886606250438896
+--- !u!4 &7968038643339769459
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
+  m_GameObject: {fileID: 8442289802634389805}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -637, y: -82, z: 0}
-  m_LocalScale: {x: 40, y: 40, z: 40}
+  m_LocalPosition: {x: -35, y: 355.05496, z: -65.53717}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!222 &4437980303957291815
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
-  m_CullTransparentMesh: 1
---- !u!33 &-8949374172820634284
+--- !u!33 &4683893118371277685
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
+  m_GameObject: {fileID: 8442289802634389805}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4385180020565101002
+--- !u!23 &4753031630878340854
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
+  m_GameObject: {fileID: 8442289802634389805}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -72,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e04249132c8abb442bd239a20b9c7d1f, type: 2}
+  - {fileID: 2100000, guid: fab6edb97a36fd640b1354fddf70edc6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94,13 +85,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &-3884915452364909040
+--- !u!135 &1943096324925211767
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
+  m_GameObject: {fileID: 8442289802634389805}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -115,19 +106,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1959717413267617560
+--- !u!114 &-2909916332584773396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499582823083782665}
+  m_GameObject: {fileID: 8442289802634389805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b0b716b64ab2d5439a98e84b22ae920, type: 3}
+  m_Script: {fileID: 11500000, guid: 938d0a2707fb457f9097eb1f7942a9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  speed: 10
-  shield: 0
-  enemyType: 0
+  speed: 50
