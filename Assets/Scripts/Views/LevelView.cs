@@ -54,14 +54,19 @@ namespace Views
             }
             else
             {
-                timeRemaining = Controller.Level.timeBetweenWaves;
+                StartWave();
                 Controller.AdvanceWave();
-
-                if (!Controller.LastWave)
-                    StartCoroutine(SpawnWave(Controller.Level.waves[Controller.CurrentWave]));
-                else
-                    timerText.text = "LAST WAVE";
             }
+        }
+
+        private void StartWave()
+        {
+            timeRemaining = Controller.Level.timeBetweenWaves;
+
+            if (!Controller.LastWave)
+                StartCoroutine(SpawnWave(Controller.Level.waves[Controller.CurrentWave]));
+            else
+                timerText.text = "LAST WAVE";
         }
 
         private IEnumerator SpawnWave(Wave wave)
@@ -89,10 +94,10 @@ namespace Views
             if (Controller.Level != null)
             {
                 SetupLevelPrefab();
-                SetupTimer(Controller.Level.startingDelay);
                 SetupEnemiesText();
                 SetupCoinsText();
                 SetupTowerMenu();
+                StartTimer(Controller.Level.startingDelay);
             }
             else
             {
@@ -116,6 +121,11 @@ namespace Views
             Instantiate(levelStructurePrefab.levelStructure, levelStructureContainer.transform);
         }
 
+        private void StartTimer(float timer)
+        {
+            timeRemaining = timer;
+        }
+
         private void SetupTowerButton(GameObject towerButtonPos, Action<Button> buttonAction)
         {
             var towerButton = Instantiate(towerButtonPrefab, towerButtonContainer.transform);
@@ -127,11 +137,6 @@ namespace Views
         private void SetupTowerMenu()
         {
             towerMenu.gameObject.SetActive(false);
-        }
-
-        private void SetupTimer(float startingDelay)
-        {
-            timeRemaining = startingDelay;
         }
 
         private void SetupEnemiesText()
@@ -152,12 +157,12 @@ namespace Views
             Controller.ReturnEnemy(enemy);
         }
 
-        public void OnTopTowerButtonClicked(Button button)
+        private void OnTopTowerButtonClicked(Button button)
         {
             TowerMenu(button.transform.position, true, button.transform);
         }
         
-        public void OnTowerButtonClicked(Button button)
+        private void OnTowerButtonClicked(Button button)
         {
             TowerMenu(button.transform.position, false, button.transform);
         }

@@ -37,8 +37,10 @@ namespace Controllers
                     return projectile;
                 }
             }
-
-            return null;
+            
+            var newProjectile = Instantiate(projectilePrefab, transform);
+            projectiles.Add(newProjectile);
+            return newProjectile;
         }
 
         public void ReturnProjectile(GameObject projectile)

@@ -11,8 +11,8 @@ namespace Models
         public int range;
         public int shieldDamage;
         public float attackCooldown;
-        public ProjectilePool projectilePool;
         
+        private ProjectilePool projectilePool;
         private float lastAttackTime;
 
         private void Start()

@@ -1,22 +1,28 @@
-﻿using Controllers;
+﻿using System;
+using Controllers;
 using UnityEngine;
 
 namespace Models
 {
     public class Projectile : MonoBehaviour
     {
-        public float speed = 10.0f;
+        public float speed;
+        public int projectileLife;
         
         private int damage;
         private int shieldDamage;
         private Transform target;
         private ProjectilePool projectilePool;
-
+        private Vector3 moveDirection;
+        private float projectileTimer;
+        
         public void SetProjectile(Transform newTarget, int damage, int shieldDamage)
         {
             target = newTarget;
             this.damage = damage;
             this.shieldDamage = shieldDamage;
+            projectileTimer = 0;
+            CalculateDirection();
         }
         
         private void Start()
@@ -26,10 +32,24 @@ namespace Models
 
         private void Update()
         {
-            ProjectileMovement();
+            Movement();
+            ValidateProjectileLife();
         }
 
-        private void ProjectileMovement()
+        private void Movement()
+        {
+            transform.Translate(moveDirection * speed * Time.deltaTime);
+        }
+
+        private void ValidateProjectileLife()
+        {
+            projectileTimer += Time.deltaTime;
+            
+            if (projectileTimer >= projectileLife)
+                projectilePool.ReturnProjectile(gameObject);
+        }
+
+        private void CalculateDirection()
         {
             if (target == null)
             {
@@ -37,14 +57,16 @@ namespace Models
                 return;
             }
 
-            var moveDirection = (target.position - transform.position).normalized;
-            transform.Translate(moveDirection * speed * Time.deltaTime);
+            var targetPosition = CalculatePosition(target.position, target.GetComponent<Enemy>().speed);
+            moveDirection = (targetPosition - transform.position).normalized;
+        }
+        
+        private Vector3 CalculatePosition(Vector3 targetPosition, float targetSpeed)
+        {
+            var timeToImpact = Vector3.Distance(transform.position, targetPosition) / speed;
+            var futurePosition = targetPosition + targetSpeed * Vector3.right * timeToImpact;
 
-            var distanceToTarget = Vector3.Distance(transform.position, target.position);
-            if (distanceToTarget < 0.1f)
-            {
-                ApplyDamage(target.gameObject);
-            }
+            return futurePosition;
         }
 
         private void ApplyDamage(GameObject enemy)
@@ -55,6 +77,12 @@ namespace Models
                 enemyScript.TakeDamage(damage, shieldDamage, gameObject);
                 projectilePool.ReturnProjectile(gameObject);
             }
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.GetComponent<Enemy>())
+                ApplyDamage(other.gameObject);
         }
     }
 }

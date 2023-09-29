@@ -82,6 +82,11 @@ namespace Controllers
         {
             PlayerState.Coins += GetEnemyCoins(enemy.GetComponent<Enemy>().enemyType);
             ReturnEnemy(enemy);
+
+            if (LastWave && enemyPool.EnemiesDead())
+            {
+                // TODO - WIN
+            }
         }
         
         private void OnCurrencyChangedEvent(int amount)

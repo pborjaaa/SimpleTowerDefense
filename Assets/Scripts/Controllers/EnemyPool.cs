@@ -45,5 +45,17 @@ namespace Controllers
             enemy.SetActive(false);
             enemyPool.Add(enemy);
         }
+
+        public bool EnemiesDead()
+        {
+            foreach (var enemy in enemyPool)
+            {
+                if (enemy.activeSelf)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
