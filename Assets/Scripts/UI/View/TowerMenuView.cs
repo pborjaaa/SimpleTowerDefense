@@ -58,7 +58,8 @@ namespace UI.View
                 if (towerPrefabs.TryGetValue(towerType, out var prefab))
                 {
                     var tower = Instantiate(prefab, towersContainer.transform);
-                    tower.transform.position = currentButton.position;
+                    var worldPoint = Camera.main!.ScreenToWorldPoint(currentButton.position);
+                    tower.transform.position = worldPoint;
                     currencyChangedEvent.Publish(-Controller.GetTowerCost(towerType));
                     currentButton.gameObject.SetActive(false);
                     gameObject.SetActive(false);

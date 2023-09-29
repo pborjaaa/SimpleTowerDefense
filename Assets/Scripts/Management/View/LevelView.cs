@@ -111,12 +111,14 @@ namespace Management.View
             levelStructurePrefab = Controller.Level.levelPrefabStructure.GetComponent<LevelStructurePrefab>();
             foreach (var towerButtonPos in levelStructurePrefab.towerPositions)
             {
-                SetupTowerButton(towerButtonPos, OnTowerButtonClicked);
+                var screenPoint = Camera.main!.WorldToScreenPoint(towerButtonPos.transform.position);
+                SetupTowerButton(screenPoint, OnTowerButtonClicked);
             }
 
             foreach (var towerButtonPos in levelStructurePrefab.topTowerPositions)
             {
-                SetupTowerButton(towerButtonPos, OnTopTowerButtonClicked);
+                var screenPoint = Camera.main!.WorldToScreenPoint(towerButtonPos.transform.position);
+                SetupTowerButton(screenPoint, OnTopTowerButtonClicked);
             }
             
             Instantiate(levelStructurePrefab.levelStructure, levelStructureContainer.transform);
@@ -127,11 +129,11 @@ namespace Management.View
             timeRemaining = timer;
         }
 
-        private void SetupTowerButton(GameObject towerButtonPos, Action<Button> buttonAction)
+        private void SetupTowerButton(Vector3 towerButtonPos, Action<Button> buttonAction)
         {
             var towerButton = Instantiate(towerButtonPrefab, towerButtonContainer.transform);
             var towerButtonComponent = towerButton.GetComponent<Button>();
-            towerButton.transform.position = towerButtonPos.transform.position;
+            towerButton.transform.position = towerButtonPos;
             towerButtonComponent.onClick.AddListener(() => buttonAction(towerButtonComponent));
         }
 
