@@ -1,6 +1,7 @@
-﻿using UnityEngine.SceneManagement;
+﻿using Controllers;
+using UnityEngine.SceneManagement;
 
-namespace Controllers
+namespace Management.Controller
 {
     public class MainMenuController : ViewController
     {

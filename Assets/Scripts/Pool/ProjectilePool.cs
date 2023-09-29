@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Controllers
+namespace Pool
 {
     public class ProjectilePool : MonoBehaviour
     {
-        public GameObject projectilePrefab;
-        public int poolSize;
+        [SerializeField] private int poolSize;
         
         private List<GameObject> projectiles;
-
+        private GameObject projectilePrefab;
+        
         public void Start()
         {
             InitializePool();
@@ -17,6 +17,7 @@ namespace Controllers
         
         private void InitializePool()
         {
+            projectilePrefab = Resources.Load<GameObject>("Prefabs/Projectile");
             projectiles = new List<GameObject>();
 
             for (var i = 0; i < poolSize; i++)

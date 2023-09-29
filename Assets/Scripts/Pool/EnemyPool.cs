@@ -2,7 +2,7 @@
 using Models;
 using UnityEngine;
 
-namespace Controllers
+namespace Pool
 {
     public class EnemyPool
     {
@@ -22,9 +22,8 @@ namespace Controllers
             foreach (var enemyInstance in enemyPool)
             {
                 var enemy = enemyInstance.GetComponent<Enemy>();
-                if (enemy != null && enemy.enemyType == type)
+                if (enemy != null && enemy.enemyType == type && !enemyInstance.activeSelf)
                 {
-                    enemyPool.Remove(enemyInstance);
                     enemyInstance.SetActive(true);
                     return enemyInstance;
                 }
@@ -33,6 +32,7 @@ namespace Controllers
             if (enemyPrefabs.TryGetValue(type, out var prefab))
             {
                 var enemyInstance = Object.Instantiate(prefab);
+                enemyPool.Add(enemyInstance);
                 return enemyInstance;
             }
 

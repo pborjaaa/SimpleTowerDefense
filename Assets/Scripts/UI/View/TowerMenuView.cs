@@ -23,8 +23,6 @@ namespace UI.View
         
         private void Start()
         {
-            SetController(new TowerMenuController());
-            
             towerPrefabs.Add(TowerType.NORMAL, normalTowerPrefab);
             towerPrefabs.Add(TowerType.HIGH_DAMAGE, highDamageTowerPrefab);
             towerPrefabs.Add(TowerType.LONG_RANGE, longRangeTowerPrefab);
@@ -70,6 +68,7 @@ namespace UI.View
 
         public void Setup(PlayerState playerState, Transform button, CurrencyChangedEvent currencyChangedEvent)
         {
+            SetController(new TowerMenuController());
             this.currencyChangedEvent = currencyChangedEvent;
             Controller.PlayerState = playerState;
             currentButton = button;

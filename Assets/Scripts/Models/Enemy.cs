@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Controllers;
 using Events;
 using UnityEngine;
 
@@ -9,8 +8,8 @@ namespace Models
     public class Enemy : MonoBehaviour
     {
         public int health;
-        public float speed;
         public int shield;
+        public float speed;
         public EnemyType enemyType;
         
         private int currentWaypointIndex = 0;

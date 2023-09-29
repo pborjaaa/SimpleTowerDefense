@@ -1,8 +1,9 @@
-﻿using Controllers;
+﻿using Management.Controller;
 using UnityEngine;
 using UnityEngine.UI;
+using Views;
 
-namespace Views
+namespace Management.View
 {
     public class MainMenuView : NavigableView<MainMenuController>
     {

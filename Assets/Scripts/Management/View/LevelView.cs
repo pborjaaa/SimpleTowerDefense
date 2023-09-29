@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
-using Controllers;
+using Management.Controller;
 using Models;
 using TMPro;
 using UI.View;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utilities;
+using Views;
 
-namespace Views
+namespace Management.View
 {
     public class LevelView : NavigableView<LevelController>
     {
@@ -17,11 +17,13 @@ namespace Views
         [SerializeField] private TextMeshProUGUI escapedEnemiesText;
         [SerializeField] private TextMeshProUGUI coinsText;
         [SerializeField] private int towerMenuOffset;
-        [SerializeField] private GameObject towerMenu;
+        [SerializeField] private TowerMenuView towerMenu;
         [SerializeField] private GameObject enemysContainer;
         [SerializeField] private GameObject levelStructureContainer;
         [SerializeField] private GameObject towerButtonContainer;
         [SerializeField] private GameObject towerButtonPrefab;
+        [SerializeField] private LoseViewController losePopup;
+        [SerializeField] private WinViewController winPopup;
         
         private float timeRemaining;
         private LevelStructurePrefab levelStructurePrefab;
@@ -96,7 +98,6 @@ namespace Views
                 SetupLevelPrefab();
                 SetupEnemiesText();
                 SetupCoinsText();
-                SetupTowerMenu();
                 StartTimer(Controller.Level.startingDelay);
             }
             else
@@ -134,11 +135,6 @@ namespace Views
             towerButtonComponent.onClick.AddListener(() => buttonAction(towerButtonComponent));
         }
 
-        private void SetupTowerMenu()
-        {
-            towerMenu.gameObject.SetActive(false);
-        }
-
         private void SetupEnemiesText()
         {
             escapedEnemiesText.text = "Enemies escaped: " + Controller.EscapedEnemies + "/" + Controller.Level.maxEnemiesEscaped;
@@ -153,8 +149,13 @@ namespace Views
         {
             Controller.EscapedEnemies++;
             SetupEnemiesText();
-            Controller.ValidateGameConditions();
             Controller.ReturnEnemy(enemy);
+
+            if (Controller.LoseCondition())
+            {
+                losePopup.gameObject.SetActive(true);
+                losePopup.Setup(Controller.EscapedEnemies);
+            }
         }
 
         private void OnTopTowerButtonClicked(Button button)
@@ -170,7 +171,7 @@ namespace Views
         private void TowerMenu(Vector3 position, bool topButton, Transform button)
         {
             towerMenu.gameObject.SetActive(true);
-            towerMenu.GetComponent<TowerMenuView>().Setup(Controller.PlayerState, button, Controller.CurrencyChangedEvent);
+            towerMenu.Setup(Controller.PlayerState, button, Controller.CurrencyChangedEvent);
             towerMenu.transform.position = topButton ? new Vector3(position.x, position.y - towerMenuOffset, position.z) : new Vector3(position.x, position.y + towerMenuOffset, position.z);
         }
         
@@ -178,6 +179,11 @@ namespace Views
         {
             Controller.OnEnemyDeathEvent(enemy);
             SetupCoinsText();
+
+            if (Controller.WinCondition())
+            {
+                winPopup.gameObject.SetActive(true);
+            }
         }
     }
 }

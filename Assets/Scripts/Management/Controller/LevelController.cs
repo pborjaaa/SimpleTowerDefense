@@ -1,11 +1,14 @@
 ﻿using System;
+using Controllers;
 using Events;
 using Models;
+using Pool;
+using UI.View;
 using UnityEngine;
 using Utilities;
 using Random = UnityEngine.Random;
 
-namespace Controllers
+namespace Management.Controller
 {
     public class LevelController : ViewController
     {
@@ -17,6 +20,8 @@ namespace Controllers
         public CurrencyChangedEvent CurrencyChangedEvent;
         public int EscapedEnemies;
         public PlayerState PlayerState;
+        public WinViewController WinPrefab;
+        public LoseViewController LosePrefab;
         
         private EnemyPool enemyPool;
         
@@ -28,6 +33,8 @@ namespace Controllers
             CurrencyChangedEvent.Subscribe(OnCurrencyChangedEvent);
             PlayerState = new PlayerState(GameConfig.InitialCoins, CurrencyChangedEvent);
             enemyPool = new EnemyPool();
+            WinPrefab = Resources.Load<WinViewController>("Prefabs/WinPopup");
+            LosePrefab = Resources.Load<LoseViewController>("Prefabs/LosePopup");
             
             var currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
             Level = levelLoader.Load("Level " + currentLevel);
@@ -70,23 +77,20 @@ namespace Controllers
             return childObjects;
         }
 
-        public void ValidateGameConditions()
+        public bool LoseCondition()
         {
-            if (EscapedEnemies >= Level.maxEnemiesEscaped)
-            {
-                //TODO - LOSE CONDITION
-            }
+            return EscapedEnemies >= Level.maxEnemiesEscaped;
         }
         
         public void OnEnemyDeathEvent(GameObject enemy)
         {
             PlayerState.Coins += GetEnemyCoins(enemy.GetComponent<Enemy>().enemyType);
             ReturnEnemy(enemy);
+        }
 
-            if (LastWave && enemyPool.EnemiesDead())
-            {
-                // TODO - WIN
-            }
+        public bool WinCondition()
+        {
+            return LastWave && enemyPool.EnemiesDead();
         }
         
         private void OnCurrencyChangedEvent(int amount)

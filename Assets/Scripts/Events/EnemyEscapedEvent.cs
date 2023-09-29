@@ -1,5 +1,4 @@
-﻿using Models;
-using UnityEngine;
+﻿using UnityEngine;
 using Utilities.RedWolves.Solitaire.Core.Event;
 
 namespace Events
