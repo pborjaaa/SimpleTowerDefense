@@ -155,7 +155,7 @@ MonoBehaviour:
   timerText: {fileID: 1160490598}
   escapedEnemiesText: {fileID: 670473693}
   coinsText: {fileID: 289725990}
-  towerMenuOffset: 125
+  towerMenuOffset: 100
   towerMenu: {fileID: 1662707830}
   enemysContainer: {fileID: 885658893}
   levelStructureContainer: {fileID: 1038948352}

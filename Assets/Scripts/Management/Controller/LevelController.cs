@@ -72,7 +72,7 @@ namespace Management.Controller
             return childObjects;
         }
 
-        public bool LoseCondition()
+        public bool LoseConditionMatched()
         {
             return EscapedEnemies >= Level.maxEnemiesEscaped;
         }
@@ -83,7 +83,7 @@ namespace Management.Controller
             ReturnEnemy(enemy);
         }
 
-        public bool WinCondition()
+        public bool WinConditionMatched()
         {
             return LastWave && enemyPool.AreAllEnemiesDead();
         }

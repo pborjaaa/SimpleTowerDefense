@@ -149,12 +149,12 @@ namespace Management.View
             SetupEnemiesText();
             Controller.ReturnEnemy(enemy);
 
-            if (Controller.LoseCondition())
+            if (Controller.LoseConditionMatched())
             {
                 losePopup.gameObject.SetActive(true);
                 losePopup.Setup(Controller.EscapedEnemies);
             }
-            else if (Controller.WinCondition())
+            else if (Controller.WinConditionMatched())
             {
                 winPopup.gameObject.SetActive(true);
             }
@@ -182,7 +182,7 @@ namespace Management.View
             Controller.OnEnemyDeathEvent(enemy);
             SetupCoinsText();
 
-            if (Controller.WinCondition())
+            if (Controller.WinConditionMatched())
             {
                 winPopup.gameObject.SetActive(true);
             }
