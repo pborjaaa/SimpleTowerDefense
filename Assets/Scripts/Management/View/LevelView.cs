@@ -154,6 +154,10 @@ namespace Management.View
                 losePopup.gameObject.SetActive(true);
                 losePopup.Setup(Controller.EscapedEnemies);
             }
+            else if (Controller.WinCondition())
+            {
+                winPopup.gameObject.SetActive(true);
+            }
         }
 
         private void OnTopTowerButtonClicked(Button button)
