@@ -85,7 +85,7 @@ namespace Management.Controller
 
         public bool WinCondition()
         {
-            return LastWave && enemyPool.EnemiesDead();
+            return LastWave && enemyPool.AreAllEnemiesDead();
         }
 
         private int GetEnemyCoins(EnemyType type)

@@ -100,10 +100,6 @@ namespace Management.View
                 SetupCoinsText();
                 StartTimer(Controller.Level.startingDelay);
             }
-            else
-            {
-                //TODO - pantalla de fin de levels
-            }
         }
 
         private void SetupLevelPrefab()

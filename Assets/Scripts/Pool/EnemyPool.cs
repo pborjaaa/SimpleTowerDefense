@@ -43,10 +43,9 @@ namespace Pool
         {
             enemy.transform.position = default;
             enemy.SetActive(false);
-            enemyPool.Add(enemy);
         }
 
-        public bool EnemiesDead()
+        public bool AreAllEnemiesDead()
         {
             foreach (var enemy in enemyPool)
             {
