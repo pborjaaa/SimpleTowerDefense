@@ -58,14 +58,17 @@ namespace Models
                 return;
             }
 
-            var targetPosition = CalculatePosition(target.position, target.GetComponent<Enemy>().speed);
+            var targetVelocity = new Vector3(target.GetComponent<Enemy>().speed, 0, 0);
+            var targetPosition = CalculatePosition(target.position, targetVelocity);
             moveDirection = (targetPosition - transform.position).normalized;
         }
         
-        private Vector3 CalculatePosition(Vector3 targetPosition, float targetSpeed)
+        private Vector3 CalculatePosition(Vector3 targetPosition, Vector3 targetVelocity)
         {
-            var timeToImpact = Vector3.Distance(transform.position, targetPosition) / speed;
-            var futurePosition = targetPosition + targetSpeed * Vector3.right * timeToImpact;
+            var toTarget = targetPosition - transform.position;
+            var relativeVelocity = targetVelocity - speed * toTarget.normalized;
+            var timeToImpact = toTarget.magnitude / relativeVelocity.magnitude;
+            var futurePosition = targetPosition + targetVelocity * timeToImpact;
 
             return futurePosition;
         }

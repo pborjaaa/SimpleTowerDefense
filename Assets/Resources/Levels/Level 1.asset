@@ -18,4 +18,6 @@ MonoBehaviour:
   maxEnemiesEscaped: 5
   waves:
   - {fileID: 11400000, guid: 0ab0bd724902e1849b066e99cb666c42, type: 2}
+  - {fileID: 11400000, guid: f964ebf85d6158a4ab51024385b2fe74, type: 2}
+  - {fileID: 11400000, guid: 6e3c289099e467b4dbc6610234d52302, type: 2}
   levelPrefabStructure: {fileID: 2972461357414824506, guid: 09c88f278eee7354990419e8420a0e6d, type: 3}
