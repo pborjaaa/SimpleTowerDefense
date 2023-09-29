@@ -13,5 +13,6 @@ namespace Models
         public float timeBetweenWaves;
         public int maxEnemiesEscaped;
         public List<Wave> waves;
+        public GameObject levelPrefabStructure;
     }
 }

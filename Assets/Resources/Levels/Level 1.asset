@@ -19,4 +19,4 @@ MonoBehaviour:
   waves:
   - {fileID: 11400000, guid: 0ab0bd724902e1849b066e99cb666c42, type: 2}
   - {fileID: 11400000, guid: f964ebf85d6158a4ab51024385b2fe74, type: 2}
-  levelPrefab: {fileID: 2542709104895318755, guid: 78353adfb3249d14aa88abc570f5e5a3, type: 3}
+  levelPrefabStructure: {fileID: 2972461357414824506, guid: 09c88f278eee7354990419e8420a0e6d, type: 3}

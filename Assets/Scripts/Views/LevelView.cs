@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Controllers;
 using Models;
 using TMPro;
 using UI.View;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utilities;
 
@@ -11,16 +13,18 @@ namespace Views
 {
     public class LevelView : NavigableView<LevelController>
     {
-        [SerializeField] private GameObject startPoint;
-        [SerializeField] private GameObject[] paths;
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI escapedEnemiesText;
         [SerializeField] private TextMeshProUGUI coinsText;
         [SerializeField] private int towerMenuOffset;
         [SerializeField] private GameObject towerMenu;
         [SerializeField] private GameObject enemysContainer;
+        [SerializeField] private GameObject levelStructureContainer;
+        [SerializeField] private GameObject towerButtonContainer;
+        [SerializeField] private GameObject towerButtonPrefab;
         
         private float timeRemaining;
+        private LevelStructurePrefab levelStructurePrefab;
         
         private void Start()
         {
@@ -77,17 +81,18 @@ namespace Views
             var enemy = Controller.GetEnemy(enemyType);
             enemy.transform.parent = enemysContainer.transform;
             var enemyComponent = enemy.GetComponent<Enemy>();
-            enemyComponent.Setup(Controller.ChooseRandomPath(paths), Controller.EnemyEscapedEvent, startPoint.transform, Controller.EnemyDeathEvent);
+            enemyComponent.Setup(Controller.ChooseRandomPath(levelStructurePrefab.paths), Controller.EnemyEscapedEvent, levelStructurePrefab.startingPos, Controller.EnemyDeathEvent);
         }
 
         private void SetupLevel()
         {
             if (Controller.Level != null)
             {
+                SetupLevelPrefab();
                 SetupTimer(Controller.Level.startingDelay);
                 SetupEnemiesText();
                 SetupCoinsText();
-                SetupPrefabs();
+                SetupTowerMenu();
             }
             else
             {
@@ -95,7 +100,31 @@ namespace Views
             }
         }
 
-        private void SetupPrefabs()
+        private void SetupLevelPrefab()
+        {
+            levelStructurePrefab = Controller.Level.levelPrefabStructure.GetComponent<LevelStructurePrefab>();
+            foreach (var towerButtonPos in levelStructurePrefab.towerPositions)
+            {
+                SetupTowerButton(towerButtonPos, OnTowerButtonClicked);
+            }
+
+            foreach (var towerButtonPos in levelStructurePrefab.topTowerPositions)
+            {
+                SetupTowerButton(towerButtonPos, OnTopTowerButtonClicked);
+            }
+            
+            Instantiate(levelStructurePrefab.levelStructure, levelStructureContainer.transform);
+        }
+
+        private void SetupTowerButton(GameObject towerButtonPos, Action<Button> buttonAction)
+        {
+            var towerButton = Instantiate(towerButtonPrefab, towerButtonContainer.transform);
+            var towerButtonComponent = towerButton.GetComponent<Button>();
+            towerButton.transform.position = towerButtonPos.transform.position;
+            towerButtonComponent.onClick.AddListener(() => buttonAction(towerButtonComponent));
+        }
+
+        private void SetupTowerMenu()
         {
             towerMenu.gameObject.SetActive(false);
         }
